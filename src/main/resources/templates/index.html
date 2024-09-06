@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Excel Upload</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+
+<h1>Excel Upload</h1>
+
+<form id="excelUploadForm" enctype="multipart/form-data">
+    <label for="file">Select Excel File : </label>
+    <input type="file" id="file" name="file" accept=".xlsx, .xls" required>
+
+    <button type="submit">등록</button>
+</form>
+
+<!-- Excel Template Download -->
+<a href="/api/orders/download-template" download>
+    <button>Excel Template 다운로드</button>
+</a>
+
+<div class="message success" id="successMessage">업로드 성공</div>
+<div class="message error" id="errorMessage">업로드에 실패하였습니다.</div>
+
+<script>
+    document.getElementById("excelUploadForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const formData = new FormData();
+        const fileInput = document.getElementById("file");
+        const file = fileInput.files[0];
+
+        if (!file) {
+            alert("파일을 등록해주세요.");
+            return;
+        }
+
+        formData.append("file", file);
+
+        fetch("/api/orders/excelUpload", {
+            method: "POST",
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById("successMessage").style.display = "block";
+                    document.getElementById("errorMessage").style.display = "none";
+                } else {
+                    throw new Error("업로드에 실패하엿습니다.");
+                }
+            })
+            .catch(error => {
+                document.getElementById("errorMessage").style.display = "block";
+                document.getElementById("successMessage").style.display = "none";
+            });
+    });
+</script>
+</body>
+</html>
