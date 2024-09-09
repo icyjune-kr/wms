@@ -4,12 +4,12 @@ import wms.order.entity.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, String> {
 
-    Optional<Order> findById(String orderId);
+    List<Order> findByOrderId(String orderId);
 
-    Optional<Order> findByVendorId(String vendorId);
+    List<Order> findByVendorId(String vendorId);
 }

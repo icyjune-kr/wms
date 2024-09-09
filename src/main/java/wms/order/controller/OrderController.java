@@ -18,6 +18,7 @@ import javax.validation.Valid;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequestMapping("/api/orders")
@@ -41,18 +42,18 @@ public class OrderController {
 
     @Operation(summary = "주문 ID로 주문 조회", description = "주문 ID로 주문을 조회")
     @GetMapping("/{orderId}")
-    public ResponseEntity<Order> getOrderById(
+    public ResponseEntity<List<Order>> getOrderById(
             @Parameter(description = "조회할 주문의 ID", example = "ORD12345") @PathVariable String orderId) {
-        Order order = orderService.getOrderById(orderId);
-        return ResponseEntity.ok(order);
+        List<Order> orders = orderService.getOrderById(orderId);
+        return ResponseEntity.ok(orders);
     }
 
     @Operation(summary = "공급처 ID로 주문 조회", description = "공급처 ID로 주문을 조회")
     @GetMapping("/vendor/{vendorId}")
-    public ResponseEntity<Order> getOrderByVendor(
+    public ResponseEntity<List<Order>> getOrderByVendor(
             @Parameter(description = "조회할 벤더의 ID", example = "VEN12345") @PathVariable String vendorId) {
-        Order order = orderService.getOrderByVendor(vendorId);
-        return ResponseEntity.ok(order);
+        List<Order> orders = orderService.getOrderByVendor(vendorId);
+        return ResponseEntity.ok(orders);
     }
 
     @Operation(summary = "엑셀 파일로 주문 생성", description = "엑셀 파일 업로드")

@@ -103,25 +103,35 @@ public class OrderService {
 
         return orderItem;
     }
+
     // 주문 ID로 특정 주문 조회
-    public Order getOrderById(String orderId) {
-        return orderRepository.findById(orderId)
-                .orElseThrow(() -> new GlobalExceptionHandler.OrderNotFoundException("Order ID: " + orderId));
+    public List<Order> getOrderById(String orderId) {
+        List<Order> orders = orderRepository.findByOrderId(orderId);
+
+        if (orders.isEmpty()) {
+            throw new GlobalExceptionHandler.OrderNotFoundException("Order ID: " + orderId);
+        }
+
+        return orders;
     }
 
     // 벤더 ID로 특정 주문 조회
-    public Order getOrderByVendor(String orderId) {
-        return orderRepository.findByVendorId(orderId)
-                .orElseThrow(() -> new GlobalExceptionHandler.OrderNotFoundException("vendorId: " + orderId));
+    public List<Order> getOrderByVendor(String vendorId) {
+        List<Order> orders = orderRepository.findByVendorId(vendorId);
+
+        if (orders.isEmpty()) {
+            throw new GlobalExceptionHandler.OrderNotFoundException("Order ID: " + vendorId);
+        }
+
+        return orders;
     }
 
-    // 엑셀 파일을 처리하는 메서드
+    // 엑셀 파일을 처리
     public void processExcelFile(MultipartFile file) throws IOException {
         try (InputStream is = file.getInputStream(); Workbook workbook = new XSSFWorkbook(is)) {
-            Sheet sheet = workbook.getSheetAt(0);  // 첫 번째 시트를 가져옵니다.
+            Sheet sheet = workbook.getSheetAt(0);
             List<Order> orders = new ArrayList<>();
 
-            // 첫 번째 행은 헤더이므로, 두 번째 행부터 데이터를 읽습니다.
             for (int rowIndex = 1; rowIndex <= sheet.getLastRowNum(); rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
                 if (row == null) continue;
@@ -150,7 +160,6 @@ public class OrderService {
                 // Order 저장
                 orderRepository.save(order);
 
-                // OrderItem 처리 (단일 주문이 여러 주문 항목을 가질 수 있음)
                 OrderItem orderItem = new OrderItem();
                 orderItem.setOrderId(order.getOrderId());
 

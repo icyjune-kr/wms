@@ -12,7 +12,6 @@ public class OrderItemDto {
     private String channelOrderSeq;
     @NotBlank(message = "채널 상품 코드(channelItemCode)는 필수입니다.")
     private String channelItemCode;
-    @NotBlank(message = "채널 옵션 코드(channelOptionCode)는 필수입니다.")
     private String channelOptionCode;
     @NotBlank(message = "채널 상품 이름(channelItemNm)은 필수입니다.")
     private String channelItemNm;
